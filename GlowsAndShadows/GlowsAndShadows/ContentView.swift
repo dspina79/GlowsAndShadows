@@ -29,17 +29,42 @@ extension View {
     }
 }
 
+extension View {
+    func innerShadow<S: Shape>(using shape: S, angle: Angle = .degrees(0), color: Color = .black, width: CGFloat = 6, blur: CGFloat = 6) -> some View {
+        
+        let finalX = CGFloat(cos(angle.radians - .pi / 2))
+        let finalY = CGFloat(sin(angle.radians - .pi / 2))
+        return self
+            .overlay(
+                shape
+                    .stroke(color, lineWidth: width)
+                    .offset(x: finalX * width * 0.6, y: finalY * width * 0.6)
+                    .blur(radius: blur)
+                    .mask(shape)
+            )
+    }
+}
+
 
 struct ContentView: View {
     var body: some View {
         ZStack {
+            Circle()
+                .fill(Color.red)
+                .frame(width: 250, height: 250)
+                .innerShadow(using: Circle())
             
-            Text("Elijah")
-                .font(.system(size: 96, weight: .black, design: .rounded))
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .frame(width: 300, height: 200)
-                .rainbowGlow()
+            Rectangle()
+                .fill(Color.blue)
+                .frame(width: 100, height: 100)
+                .innerShadow(using: Rectangle())
+            
+//            Text("Elijah")
+//                .font(.system(size: 96, weight: .black, design: .rounded))
+//                .foregroundColor(.white)
+//                .multilineTextAlignment(.center)
+//                .frame(width: 300, height: 200)
+//                .rainbowGlow()
             
 //            Circle()
 //                .fill(Color.white)
@@ -49,7 +74,7 @@ struct ContentView: View {
                 // multiple shaodows increases depth and strength of the overall shadow
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
+        .background(Color.white)
         .edgesIgnoringSafeArea(.all)
     }
 }
